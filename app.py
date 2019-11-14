@@ -39,16 +39,19 @@ def get_base_response():
 def main(name):
     resp = get_base_response()
 
-    if name not in lists:
-        lists[name] = []
-
     if request.method == "GET":
-        resp.data = json.dumps(lists[name])
+        if name not in lists:
+            resp.data = json.dumps([])
+        else:
+            resp.data = json.dumps(lists[name])
 
     if request.method == "POST":
         json_body = request.get_json(force=True)
 
         json_body['id'] = str(uuid.uuid4())
+
+        if name not in lists:
+            lists[name] = []
 
         lists[name].append(json_body)
 
@@ -56,6 +59,11 @@ def main(name):
         resp.data = json.dumps(json_body)
     if request.method == "DELETE":
         todo_id = request.args.get('id')
+
+        if name not in lists:
+            resp.status_code = 404
+            resp.data = json.dumps([])
+            return resp
 
         for todo in lists[name]:
             if todo['id'] == todo_id:
