@@ -68,13 +68,25 @@ def main(name):
             resp.data = json.dumps([])
             return resp
 
-        for todo in lists[name]:
-            if todo['id'] == todo_id:
-                lists[name].remove(todo)
-                break
+        todo_delete(name, todo_id)
+
     if request.method == "OPTIONS":
         resp.status_code = 200
         return resp
+
+    return resp
+
+
+@app.route('/<string:name>/todo/<string:todo_id>', methods=["DELETE"])
+def todo_delete(name, todo_id):
+    resp = get_base_response()
+
+    if name not in lists:
+        resp.status_code = 404
+        resp.data = json.dumps([])
+        return resp
+
+    todo_delete(name, todo_id)
 
     return resp
 
@@ -85,6 +97,12 @@ def todolists():
 
     return json.dumps(list(lists.keys()))
 
+
+def delete_todo_from_list(name, todo_id):
+    for todo in lists[name]:
+        if todo['id'] == todo_id:
+            lists[name].remove(todo)
+            break
 
 if __name__ == '__main__':
     app.run()
