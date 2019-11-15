@@ -68,7 +68,7 @@ def main(name):
             resp.data = json.dumps([])
             return resp
 
-        todo_delete(name, todo_id)
+        delete_todo_from_list(name, todo_id)
 
     if request.method == "OPTIONS":
         resp.status_code = 200
@@ -86,7 +86,7 @@ def todo_delete(name, todo_id):
         resp.data = json.dumps([])
         return resp
 
-    todo_delete(name, todo_id)
+    delete_todo_from_list(name, todo_id)
 
     return resp
 
