@@ -29,7 +29,10 @@ def load_data():
 
 def get_base_response():
     resp = Response()
+
+    resp.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, DELETE, PUT'
     resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers['Access-Control-Allow-Headers'] = '*'
     resp.headers['Content-Type'] = 'application/json'
 
     return resp
@@ -69,6 +72,9 @@ def main(name):
             if todo['id'] == todo_id:
                 lists[name].remove(todo)
                 break
+    if request.method == "OPTIONS":
+        resp.status_code = 200
+        return resp
 
     return resp
 
